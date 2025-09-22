@@ -56,6 +56,12 @@ export class AaveV3Adapter {
             const liquidityRate = reserveData.currentLiquidityRate // From tuple structure
             const apy = Number(liquidityRate) / Number(RAY) * 100
 
+            // Debug logging
+            console.log(`Aave v3 ${asset}:`, {
+              rawRate: liquidityRate.toString(),
+              apy: apy.toFixed(4) + '%'
+            })
+
             return apy
           })
         },

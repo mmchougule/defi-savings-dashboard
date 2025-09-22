@@ -41,9 +41,19 @@ export class CompoundV3Adapter {
 
       // Convert supply rate to APY
       // Compound v3 returns rate per second with 18 decimals
-      const SECONDS_PER_YEAR = 365 * 24 * 60 * 60
+      // But we need to convert to per-block rate first
+      const BLOCKS_PER_YEAR = 2102400 // ~15 second block time on Ethereum
       const ratePerSecond = Number(supplyRate) / 1e18
-      const apy = (Math.pow(1 + ratePerSecond, SECONDS_PER_YEAR) - 1) * 100
+      const ratePerBlock = ratePerSecond * 15 // Convert per-second to per-block (15 second blocks)
+      const apy = (Math.pow(1 + ratePerBlock, BLOCKS_PER_YEAR) - 1) * 100
+
+      // Debug logging
+      console.log(`Compound v3 ${asset}:`, {
+        rawRate: supplyRate.toString(),
+        ratePerSecond,
+        ratePerBlock,
+        apy: apy.toFixed(4) + '%'
+      })
 
       return apy
     } catch (error) {
@@ -229,12 +239,14 @@ export class CompoundV3Adapter {
             ])
 
           // Convert rates to APY
-          const SECONDS_PER_YEAR = 365 * 24 * 60 * 60
+          const BLOCKS_PER_YEAR = 2102400 // ~15 second block time on Ethereum
           const supplyRatePerSecond = Number(supplyRate) / 1e18
           const borrowRatePerSecond = Number(borrowRate) / 1e18
+          const supplyRatePerBlock = supplyRatePerSecond * 15 // Convert per-second to per-block
+          const borrowRatePerBlock = borrowRatePerSecond * 15 // Convert per-second to per-block
           
-          const supplyApy = (Math.pow(1 + supplyRatePerSecond, SECONDS_PER_YEAR) - 1) * 100
-          const borrowApy = (Math.pow(1 + borrowRatePerSecond, SECONDS_PER_YEAR) - 1) * 100
+          const supplyApy = (Math.pow(1 + supplyRatePerBlock, BLOCKS_PER_YEAR) - 1) * 100
+          const borrowApy = (Math.pow(1 + borrowRatePerBlock, BLOCKS_PER_YEAR) - 1) * 100
 
             return {
               symbol,
