@@ -1,11 +1,12 @@
 'use client'
 
-import { usePrivy } from '@privy-io/react-auth'
+import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { Button } from './ui/Button'
 import { Wallet, LogOut, User } from 'lucide-react'
 
 export function PrivyWalletConnect() {
   const { ready, authenticated, user, login, logout } = usePrivy()
+  const { wallets } = useWallets()
 
   if (!ready) {
     return (
@@ -37,7 +38,7 @@ export function PrivyWalletConnect() {
             {user?.email?.address || user?.phone?.number || 'Connected'}
           </p>
           <p className="text-xs text-gray-500">
-            {user?.wallet?.address?.slice(0, 6)}...{user?.wallet?.address?.slice(-4)}
+            {wallets[0]?.address?.slice(0, 6)}...{wallets[0]?.address?.slice(-4)}
           </p>
         </div>
       </div>

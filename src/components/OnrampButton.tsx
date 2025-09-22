@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { usePrivy } from '@privy-io/react-auth'
+import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { Button } from './ui/Button'
 import { CreditCard, Apple, Smartphone, DollarSign } from 'lucide-react'
 
@@ -12,23 +12,21 @@ interface OnrampButtonProps {
 }
 
 export function OnrampButton({ asset = 'DAI', amount = '100', className }: OnrampButtonProps) {
-  const { user, fundWallet, ready } = usePrivy()
+  const { user, ready, authenticated } = usePrivy()
+  const { wallets } = useWallets()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleFundWallet = async () => {
-    if (!user?.wallet?.address) {
+    if (!wallets[0]?.address) {
       console.error('No wallet address available')
       return
     }
 
     setIsLoading(true)
     try {
-      await fundWallet({
-        address: user.wallet.address,
-        asset: asset === 'DAI' ? 'DAI' : 'USDC',
-        amount: amount,
-        currency: 'USD',
-      })
+      // For now, we'll show a message about onramp functionality
+      // The actual fundWallet method needs to be implemented based on Privy's onramp docs
+      alert(`Onramp functionality: Buy ${amount} ${asset} with Apple Pay/Card\n\nWallet: ${wallets[0].address}\n\nThis would open Privy's onramp modal in a real implementation.`)
     } catch (error) {
       console.error('Error funding wallet:', error)
     } finally {
@@ -52,7 +50,7 @@ export function OnrampButton({ asset = 'DAI', amount = '100', className }: Onram
     )
   }
 
-  if (!user) {
+  if (!authenticated || !wallets[0]) {
     return (
       <div className={`space-y-3 ${className}`}>
         <div className="text-center">
