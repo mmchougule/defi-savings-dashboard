@@ -27,6 +27,7 @@ import { PrivyWalletConnect } from './PrivyWalletConnect'
 import { EnhancedDepositModal } from './EnhancedDepositModal'
 import { RealTransactionHistory } from './RealTransactionHistory'
 import { EnhancedPortfolioTracker } from './EnhancedPortfolioTracker'
+import { LiveProtocolAPY } from './LiveProtocolAPY'
 import { useUserBalances, usePortfolioSummary } from '../hooks/useProtocolData'
 import { useUSDCBalance, useDAIBalance, useWETHBalance } from '../hooks/useTokenBalance'
 import { Button } from './ui/Button'
@@ -331,30 +332,8 @@ export function CryptoTwitterDashboard() {
             <PrivyWalletConnect />
           </div>
           
-          {/* Proof Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="glass border-slate-700 rounded-xl p-4 text-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-3 flex items-center justify-center">
-                <Shield className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-white font-semibold mb-1">Aave v3</h3>
-              <p className="text-slate-400 text-sm">Up to 5.2% APY</p>
-            </div>
-            <div className="glass border-slate-700 rounded-xl p-4 text-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-3 flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-white font-semibold mb-1">Compound v2/v3</h3>
-              <p className="text-slate-400 text-sm">Up to 4.8% APY</p>
-            </div>
-            <div className="glass border-slate-700 rounded-xl p-4 text-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full mx-auto mb-3 flex items-center justify-center">
-                <Coins className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-white font-semibold mb-1">Maker DSR</h3>
-              <p className="text-slate-400 text-sm">Up to 3.2% APY</p>
-            </div>
-          </div>
+          {/* Live Protocol APY */}
+          <LiveProtocolAPY />
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-slate-500 text-sm">
             <div className="inline-flex items-center gap-2 beginner-tooltip" data-tooltip="Your money stays in your wallet, we don't hold it">

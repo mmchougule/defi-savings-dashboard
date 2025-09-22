@@ -192,6 +192,11 @@ export class ProtocolManager {
     }
   }
 
+  async getSupplyApy(protocol: string, asset: Address): Promise<number> {
+    const adapter = this.getAdapter(protocol)
+    return adapter.getSupplyApy(asset)
+  }
+
   getAdapter(protocol: string) {
     switch (protocol) {
       case 'aave_v3':
