@@ -12,7 +12,7 @@ interface OnrampButtonProps {
 }
 
 export function OnrampButton({ asset = 'DAI', amount = '100', className }: OnrampButtonProps) {
-  const { user, fundWallet } = usePrivy()
+  const { user, fundWallet, ready } = usePrivy()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleFundWallet = async () => {
@@ -36,8 +36,35 @@ export function OnrampButton({ asset = 'DAI', amount = '100', className }: Onram
     }
   }
 
+  // If Privy is not ready or not configured, show a fallback message
+  if (!ready) {
+    return (
+      <div className={`space-y-3 ${className}`}>
+        <div className="text-center">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Need {asset}? 
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Loading onramp options...
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   if (!user) {
-    return null
+    return (
+      <div className={`space-y-3 ${className}`}>
+        <div className="text-center">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Need {asset}? Connect Wallet First
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Please connect your wallet to access onramp functionality
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
