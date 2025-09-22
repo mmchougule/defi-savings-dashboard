@@ -101,7 +101,7 @@ const ProtocolInfo = ({ protocol }: { protocol: string }) => {
     },
     'compound_v3': {
       name: 'Compound v3',
-      description: 'Capital efficient markets',
+      description: 'Capital efficient money markets',
       color: 'crypto-gradient',
       icon: TrendingUp
     },
@@ -203,6 +203,11 @@ export function EnhancedDepositModal({
           )
 
       setTxHash(txHash)
+      
+      // Refresh balances after successful transaction
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Transaction failed')
     } finally {
@@ -219,6 +224,11 @@ export function EnhancedDepositModal({
   }, [onClose])
 
   if (txHash) {
+    const protocolDisplayName = protocol === 'compound_v3' ? 'Compound v3' : 
+                                protocol === 'compound_v2' ? 'Compound v2' :
+                                protocol === 'aave_v3' ? 'Aave v3' :
+                                protocol === 'maker_dsr' ? 'Maker DSR' : protocol.toUpperCase()
+    
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-2xl p-6 text-center max-w-md w-full">
@@ -229,11 +239,25 @@ export function EnhancedDepositModal({
             Transaction Successful!
           </h2>
           <p className="text-gray-600 mb-4">
-            Your {action} has been completed successfully.
+            Your {action} to {protocolDisplayName} has been completed successfully.
           </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+            <p className="text-sm text-blue-800 font-medium">
+              {action === 'deposit' ? '🎉 You are now earning yield!' : '💰 Funds withdrawn successfully'}
+            </p>
+            <p className="text-xs text-blue-600 mt-1">
+              {action === 'deposit' 
+                ? `Your ${selectedAsset} is now earning interest in ${protocolDisplayName}`
+                : `Your ${selectedAsset} has been returned to your wallet`
+              }
+            </p>
+          </div>
           <div className="bg-gray-50 rounded-lg p-3 mb-4">
             <p className="text-xs text-gray-500 mb-1">Transaction Hash:</p>
             <p className="font-mono text-sm break-all">{txHash}</p>
+          </div>
+          <div className="text-xs text-gray-500 mb-4">
+            Balances will refresh automatically...
           </div>
           <Button onClick={handleClose} className="w-full">
             Close
