@@ -1,7 +1,8 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
-import { TrendingUp, DollarSign, Percent, Layers } from 'lucide-react'
+import { Button } from './ui/Button'
+import { TrendingUp, DollarSign, Percent, Layers, Minus, ArrowUpRight } from 'lucide-react'
 
 interface PortfolioOverviewProps {
   totalUsd: number
@@ -23,6 +24,7 @@ interface PortfolioOverviewProps {
   totalProjectedDaily: number
   totalProjectedMonthly: number
   totalProjectedYearly: number
+  onWithdraw?: (protocol: string, symbol: string) => void
 }
 
 export function PortfolioOverview({ 
@@ -35,7 +37,8 @@ export function PortfolioOverview({
   totalEarnings,
   totalProjectedDaily,
   totalProjectedMonthly,
-  totalProjectedYearly
+  totalProjectedYearly,
+  onWithdraw
 }: PortfolioOverviewProps) {
 
   const stats = [
@@ -132,6 +135,62 @@ export function PortfolioOverview({
           </div>
         </CardContent>
       </Card>
+
+      {/* Active Positions */}
+      {interestData.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Layers className="h-5 w-5 mr-2 text-blue-600" />
+              Your Positions
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {interestData.map((position, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                        <DollarSign className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          {position.symbol} on {position.protocol.replace('_', ' ').toUpperCase()}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Balance: {position.balance} {position.symbol} (${position.valueUSD.toFixed(2)})
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-right">
+                      <div className="text-lg font-semibold text-green-600">
+                        {position.apy.toFixed(2)}% APY
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        ${position.projectedDaily.toFixed(2)}/day
+                      </div>
+                    </div>
+                    {onWithdraw && (
+                      <Button
+                        onClick={() => onWithdraw(position.protocol, position.symbol)}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center space-x-1"
+                      >
+                        <Minus className="h-4 w-4" />
+                        <span>Withdraw</span>
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

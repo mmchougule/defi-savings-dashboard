@@ -37,21 +37,22 @@ export class CompoundV3Adapter {
         address: cometAddress,
         abi: COMPOUND_V3_COMET_ABI,
         functionName: 'getSupplyRate',
+      }).catch((error) => {
+        console.warn(`Failed to fetch supply rate for ${asset}:`, error.message)
+        return BigInt(0) // Return 0 if function fails
       })
 
       // Convert supply rate to APY
-      // Compound v3 returns rate per second with 18 decimals
-      // But we need to convert to per-block rate first
-      const BLOCKS_PER_YEAR = 2102400 // ~15 second block time on Ethereum
-      const ratePerSecond = Number(supplyRate) / 1e18
-      const ratePerBlock = ratePerSecond * 15 // Convert per-second to per-block (15 second blocks)
-      const apy = (Math.pow(1 + ratePerBlock, BLOCKS_PER_YEAR) - 1) * 100
+      // Compound v3 returns rate per second as uint64 with 1e18 precision
+      // Convert to per-second rate first, then to APY
+      const SECONDS_PER_YEAR = 31536000 // 365 * 24 * 60 * 60
+      const ratePerSecond = Number(supplyRate) / 1e18 // Convert from wei to decimal
+      const apy = (Math.pow(1 + ratePerSecond, SECONDS_PER_YEAR) - 1) * 100
 
       // Debug logging
       console.log(`Compound v3 ${asset}:`, {
         rawRate: supplyRate.toString(),
         ratePerSecond,
-        ratePerBlock,
         apy: apy.toFixed(4) + '%'
       })
 
@@ -205,27 +206,42 @@ export class CompoundV3Adapter {
                 address: comet,
                 abi: COMPOUND_V3_COMET_ABI,
                 functionName: 'getSupplyRate',
-              }).catch(() => BigInt(0)), // Fallback to 0 if function fails
+              }).catch((error) => {
+                console.warn(`Failed to fetch supply rate for ${comet}:`, error.message)
+                return BigInt(0)
+              }),
               readContract(wagmiConfig, {
                 address: comet,
                 abi: COMPOUND_V3_COMET_ABI,
                 functionName: 'getBorrowRate',
-              }).catch(() => BigInt(0)), // Fallback to 0 if function fails
+              }).catch((error) => {
+                console.warn(`Failed to fetch borrow rate for ${comet}:`, error.message)
+                return BigInt(0)
+              }),
               readContract(wagmiConfig, {
                 address: comet,
                 abi: COMPOUND_V3_COMET_ABI,
                 functionName: 'getUtilization',
-              }).catch(() => BigInt(0)), // Fallback to 0 if function fails
+              }).catch((error) => {
+                console.warn(`Failed to fetch utilization for ${comet}:`, error.message)
+                return BigInt(0)
+              }),
               readContract(wagmiConfig, {
                 address: comet,
                 abi: COMPOUND_V3_COMET_ABI,
                 functionName: 'totalSupply',
-              }).catch(() => BigInt(0)), // Fallback to 0 if function fails
+              }).catch((error) => {
+                console.warn(`Failed to fetch total supply for ${comet}:`, error.message)
+                return BigInt(0)
+              }),
               readContract(wagmiConfig, {
                 address: comet,
                 abi: COMPOUND_V3_COMET_ABI,
                 functionName: 'totalBorrow',
-              }).catch(() => BigInt(0)), // Fallback to 0 if function fails
+              }).catch((error) => {
+                console.warn(`Failed to fetch total borrow for ${comet}:`, error.message)
+                return BigInt(0)
+              }),
               readContract(wagmiConfig, {
                 address: asset,
                 abi: ERC20_ABI,
@@ -239,14 +255,12 @@ export class CompoundV3Adapter {
             ])
 
           // Convert rates to APY
-          const BLOCKS_PER_YEAR = 2102400 // ~15 second block time on Ethereum
+          const SECONDS_PER_YEAR = 31536000 // 365 * 24 * 60 * 60
           const supplyRatePerSecond = Number(supplyRate) / 1e18
           const borrowRatePerSecond = Number(borrowRate) / 1e18
-          const supplyRatePerBlock = supplyRatePerSecond * 15 // Convert per-second to per-block
-          const borrowRatePerBlock = borrowRatePerSecond * 15 // Convert per-second to per-block
           
-          const supplyApy = (Math.pow(1 + supplyRatePerBlock, BLOCKS_PER_YEAR) - 1) * 100
-          const borrowApy = (Math.pow(1 + borrowRatePerBlock, BLOCKS_PER_YEAR) - 1) * 100
+          const supplyApy = (Math.pow(1 + supplyRatePerSecond, SECONDS_PER_YEAR) - 1) * 100
+          const borrowApy = (Math.pow(1 + borrowRatePerSecond, SECONDS_PER_YEAR) - 1) * 100
 
             return {
               symbol,

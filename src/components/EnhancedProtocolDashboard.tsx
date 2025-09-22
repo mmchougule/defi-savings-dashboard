@@ -9,6 +9,7 @@ import { useProtocolData, useUserBalances } from '../hooks/useProtocolData'
 import { PortfolioOverview } from './PortfolioOverview'
 import { ProtocolAPYView } from './ProtocolAPYView'
 import { EnhancedDepositModal } from './EnhancedDepositModal'
+import { UnifiedWalletConnect } from './UnifiedWalletConnect'
 import { SearchProtocols } from './SearchProtocols'
 import { Shield, TrendingUp, Settings, Zap, LogOut, User, Plus, Minus, RefreshCw, DollarSign } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
@@ -82,6 +83,22 @@ export function EnhancedProtocolDashboard() {
       },
     ]
   }, [protocolData])
+
+  // Calculate user balances by protocol
+  const userBalancesByProtocol = useMemo(() => {
+    const balances: Record<string, { balance: number; earning: number }> = {}
+    
+    userBalances.forEach((balance) => {
+      if (!balances[balance.protocol]) {
+        balances[balance.protocol] = { balance: 0, earning: 0 }
+      }
+      balances[balance.protocol].balance += balance.valueUSD
+      // Calculate daily earnings (simplified)
+      balances[balance.protocol].earning += (balance.valueUSD * balance.apy / 100) / 365
+    })
+    
+    return balances
+  }, [userBalances])
 
   const handleDeposit = useCallback((protocolName: string) => {
     setSelectedProtocol(protocolName)
@@ -163,6 +180,7 @@ export function EnhancedProtocolDashboard() {
                 <RefreshCw className={`w-4 h-4 mr-2 ${balancesLoading ? 'animate-spin' : ''}`} />
                 Refresh
               </Button>
+              <UnifiedWalletConnect />
               <Button variant="outline" size="sm">
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
@@ -186,6 +204,7 @@ export function EnhancedProtocolDashboard() {
             totalProjectedDaily={0}
             totalProjectedMonthly={0}
             totalProjectedYearly={0}
+            onWithdraw={handleWithdraw}
           />
         </div>
 
@@ -227,6 +246,19 @@ export function EnhancedProtocolDashboard() {
                       <p className="font-semibold">{formatCurrency(protocol.totalValueLocked)}</p>
                     </div>
                   </div>
+                  
+                  {userBalancesByProtocol[protocol.name] && (
+                    <div className="grid grid-cols-2 gap-4 text-sm pt-2 border-t">
+                      <div>
+                        <p className="text-gray-500">Your Balance</p>
+                        <p className="font-semibold">{formatCurrency(userBalancesByProtocol[protocol.name].balance)}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-500">Earning</p>
+                        <p className="font-semibold text-green-600">+{formatCurrency(userBalancesByProtocol[protocol.name].earning)}</p>
+                      </div>
+                    </div>
+                  )}
                   
                   <div>
                     <p className="text-gray-500 text-sm mb-2">Supported Assets</p>

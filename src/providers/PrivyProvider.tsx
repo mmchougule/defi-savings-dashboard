@@ -19,11 +19,16 @@ export function PrivyProvider({ children }: { children: React.ReactNode }) {
           theme: 'light',
           accentColor: '#676FFF',
         },
-        embeddedWallets: {
-          createOnLogin: 'users-without-wallets',
+        embeddedWallets: { 
+          ethereum: { createOnLogin: 'users-without-wallets' }
         },
-        loginMethods: ['email', 'google', 'apple'],
-      }}
+        loginMethods: [
+          'email', 
+          'google', 
+          'apple',
+          'wallet',
+          'farcaster'
+        ],}}
     >
       {children}
     </PrivyProviderBase>

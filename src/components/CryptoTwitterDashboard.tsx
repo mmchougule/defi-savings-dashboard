@@ -23,7 +23,7 @@ import {
   TrendingUp
 } from 'lucide-react'
 import { WalletConnection } from './WalletConnection'
-import { PrivyWalletConnect } from './PrivyWalletConnect'
+import { UnifiedWalletConnect } from './UnifiedWalletConnect'
 import { EnhancedDepositModal } from './EnhancedDepositModal'
 import { RealTransactionHistory } from './RealTransactionHistory'
 import { EnhancedPortfolioTracker } from './EnhancedPortfolioTracker'
@@ -329,7 +329,7 @@ export function CryptoTwitterDashboard() {
             Deposit stablecoins, earn with Aave, Compound, Maker — withdraw anytime.
           </p>
           <div className="glass border-slate-700 rounded-2xl p-6 mb-8">
-            <PrivyWalletConnect />
+            <UnifiedWalletConnect />
           </div>
           
           {/* Live Protocol APY */}

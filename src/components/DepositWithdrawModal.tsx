@@ -34,8 +34,8 @@ export function DepositWithdrawModal({ protocol, action, onClose, userAddress }:
   const [error, setError] = useState<string | null>(null)
   const [txHash, setTxHash] = useState<string | null>(null)
 
-  // Map display names to protocol names
-  const protocolName = protocol === 'Aave v3' ? 'aave_v3' : protocol
+  // Protocol name is already in the correct format
+  const protocolName = protocol
 
   // Get real token balances
   const { balance: usdcBalance } = useUSDCBalance()
