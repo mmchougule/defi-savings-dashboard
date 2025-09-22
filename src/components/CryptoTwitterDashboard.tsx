@@ -321,20 +321,50 @@ export function CryptoTwitterDashboard() {
           <div className="w-24 h-24 rounded-3xl crypto-gradient mx-auto mb-6 flex items-center justify-center">
             <Sparkles className="h-12 w-12 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Welcome to DeFi Savings
+          <h1 className="text-5xl font-bold text-white mb-4">
+            Ethereum's Global Savings Account
           </h1>
-          <p className="text-slate-400 text-lg mb-8">
-            The easiest way to earn money with your crypto. 
-            <br />No complicated stuff, just simple savings.
+          <p className="text-slate-300 text-xl mb-8">
+            Deposit stablecoins, earn with Aave, Compound, Maker — withdraw anytime.
           </p>
           <div className="glass border-slate-700 rounded-2xl p-6 mb-8">
             <PrivyWalletConnect />
           </div>
-          <div className="text-slate-500 text-sm">
+          
+          {/* Proof Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="glass border-slate-700 rounded-xl p-4 text-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-3 flex items-center justify-center">
+                <Shield className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">Aave v3</h3>
+              <p className="text-slate-400 text-sm">Up to 5.2% APY</p>
+            </div>
+            <div className="glass border-slate-700 rounded-xl p-4 text-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-3 flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">Compound v2/v3</h3>
+              <p className="text-slate-400 text-sm">Up to 4.8% APY</p>
+            </div>
+            <div className="glass border-slate-700 rounded-xl p-4 text-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full mx-auto mb-3 flex items-center justify-center">
+                <Coins className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">Maker DSR</h3>
+              <p className="text-slate-400 text-sm">Up to 3.2% APY</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-slate-500 text-sm">
             <div className="inline-flex items-center gap-2 beginner-tooltip" data-tooltip="Your money stays in your wallet, we don't hold it">
               <Shield className="h-4 w-4" />
               Non-custodial & Secure
+            </div>
+            <div className="hidden sm:block w-px h-4 bg-slate-600"></div>
+            <div className="inline-flex items-center gap-2">
+              <Zap className="h-4 w-4" />
+              Deposit/withdraw in 2 clicks
             </div>
           </div>
         </motion.div>
