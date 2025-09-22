@@ -1,8 +1,36 @@
 @import "tailwindcss";
 
+/* Dark Crypto Theme - Twitter/Modern Inspired */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0d0f17;
+  --foreground: #fafbfc;
+  --card: #161b22;
+  --card-foreground: #fafbfc;
+  --popover: #161b22;
+  --popover-foreground: #fafbfc;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #273f3f;
+  --secondary-foreground: #fafbfc;
+  --muted: #273f3f;
+  --muted-foreground: #a1acbd;
+  --accent: #273f3f;
+  --accent-foreground: #fafbfc;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #273f3f;
+  --input: #273f3f;
+  --ring: #3b82f6;
+  --radius: 0.75rem;
+
+  /* Crypto specific colors */
+  --crypto-green: #22c55e;
+  --crypto-red: #ef4444;
+  --crypto-blue: #3b82f6;
+  --crypto-purple: #9333ea;
+  --crypto-gold: #f59e0b;
+  --crypto-dark: #0d0f17;
+  --crypto-darker: #07080d;
 }
 
 @theme inline {
@@ -12,15 +40,91 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--crypto-dark);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Crypto gradient backgrounds */
+.crypto-gradient {
+  background: linear-gradient(135deg, var(--crypto-blue) 0%, var(--crypto-purple) 100%);
+}
+
+.crypto-green-gradient {
+  background: linear-gradient(135deg, var(--crypto-green) 0%, var(--crypto-blue) 100%);
+}
+
+.crypto-gold-gradient {
+  background: linear-gradient(135deg, var(--crypto-gold) 0%, var(--crypto-red) 100%);
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Twitter-like hover animations */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+}
+
+/* Beginner-friendly tooltips */
+.beginner-tooltip {
+  position: relative;
+}
+
+.beginner-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card);
+  color: var(--card-foreground);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 50;
+}
+
+.beginner-tooltip:hover::after {
+  opacity: 1;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }

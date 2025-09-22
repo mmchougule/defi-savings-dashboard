@@ -9,19 +9,39 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@aave/react": "^0.6.1",
+    "@apollo/client": "^4.0.5",
+    "@coinbase/onchainkit": "^1.0.2",
+    "@headlessui/react": "^2.2.8",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@reown/appkit": "^1.8.6",
+    "@reown/appkit-adapter-wagmi": "^1.8.6",
+    "@tanstack/react-query": "^5.89.0",
+    "@wagmi/connectors": "^5.10.1",
+    "axios": "^1.12.2",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "ethers": "^6.15.0",
+    "framer-motion": "^12.23.16",
+    "graphql": "^16.11.0",
+    "lucide-react": "^0.544.0",
+    "next": "15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.5.3"
+    "recharts": "^3.2.1",
+    "vaul": "^1.1.2",
+    "viem": "^2.37.7",
+    "wagmi": "^2.17.1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
