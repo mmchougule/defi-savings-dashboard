@@ -13,6 +13,8 @@
     "@apollo/client": "^4.0.5",
     "@coinbase/onchainkit": "^1.0.2",
     "@headlessui/react": "^2.2.8",
+    "@privy-io/react-auth": "^3.0.1",
+    "@privy-io/wagmi": "^2.0.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@reown/appkit": "^1.8.6",
     "@reown/appkit-adapter-wagmi": "^1.8.6",

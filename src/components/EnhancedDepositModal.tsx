@@ -10,6 +10,7 @@ import { CONTRACT_ADDRESSES } from '../constants/contracts'
 import { cn } from '@/lib/utils'
 import { protocolManager } from '../lib/protocols'
 import { formatUnits, parseUnits } from 'viem'
+import { OnrampButton } from './OnrampButton'
 
 interface EnhancedDepositModalProps {
   action: 'deposit' | 'withdraw'
@@ -330,6 +331,17 @@ export function EnhancedDepositModal({
               )}
             </div>
           </div>
+
+          {/* Onramp Section - Show when user has insufficient balance */}
+          {action === 'deposit' && selectedAssetData && parseFloat(selectedAssetData.balance) < parseFloat(amount || '0') && (
+            <div className="border-t border-gray-200 pt-6">
+              <OnrampButton 
+                asset={selectedAsset} 
+                amount={amount || '100'}
+                className="mb-4"
+              />
+            </div>
+          )}
 
           {/* Transaction Summary */}
           <div className="text-gray-900 rounded-xl p-4 border border-gray-200">

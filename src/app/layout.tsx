@@ -5,6 +5,7 @@ import { Web3Provider } from "../providers/Web3Provider";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { ApiUsageStatus } from "../components/ApiUsageStatus";
 import { AaveProviderWrapper } from "../providers/AaveProvider";
+import { PrivyProvider } from "../providers/PrivyProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,12 +33,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ErrorBoundary>
-          <Web3Provider>
-            <AaveProviderWrapper>
-              {children}
-              {process.env.NODE_ENV === 'development' && <ApiUsageStatus />}
-            </AaveProviderWrapper>
-          </Web3Provider>
+          <PrivyProvider>
+            <Web3Provider>
+              <AaveProviderWrapper>
+                {children}
+                {process.env.NODE_ENV === 'development' && <ApiUsageStatus />}
+              </AaveProviderWrapper>
+            </Web3Provider>
+          </PrivyProvider>
         </ErrorBoundary>
       </body>
     </html>

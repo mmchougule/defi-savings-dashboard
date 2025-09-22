@@ -23,6 +23,7 @@ import {
   TrendingUp
 } from 'lucide-react'
 import { WalletConnection } from './WalletConnection'
+import { PrivyWalletConnect } from './PrivyWalletConnect'
 import { EnhancedDepositModal } from './EnhancedDepositModal'
 import { RealTransactionHistory } from './RealTransactionHistory'
 import { EnhancedPortfolioTracker } from './EnhancedPortfolioTracker'
@@ -328,7 +329,7 @@ export function CryptoTwitterDashboard() {
             <br />No complicated stuff, just simple savings.
           </p>
           <div className="glass border-slate-700 rounded-2xl p-6 mb-8">
-            <WalletConnection />
+            <PrivyWalletConnect />
           </div>
           <div className="text-slate-500 text-sm">
             <div className="inline-flex items-center gap-2 beginner-tooltip" data-tooltip="Your money stays in your wallet, we don't hold it">
