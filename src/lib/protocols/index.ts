@@ -210,3 +210,4 @@ export class ProtocolManager {
 
 export const protocolManager = new ProtocolManager()
 export { AaveV3Adapter, CompoundV3Adapter, CompoundV2Adapter, MakerDSRAdapter }
+export type { ProtocolBalance } from '@/types/contracts'

@@ -66,6 +66,19 @@ const ModalRoot = ({ children, ...props }: RootProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const Component = isDesktop ? Dialog : Drawer;
 
+  // Simple body scroll prevention
+  React.useEffect(() => {
+    if (props.open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [props.open]);
+
   return (
     <ModalContext.Provider value={{ isDesktop }}>
       <Component {...props} {...(!isDesktop && { autoFocus: true })}>

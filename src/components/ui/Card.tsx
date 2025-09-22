@@ -8,7 +8,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={clsx(
-        'rounded-lg border border-gray-200 bg-white p-6 shadow-sm',
+        'rounded-lg p-6 shadow-sm',
         className
       )}
       {...props}

@@ -19,11 +19,13 @@ import {
   Sparkles,
   PiggyBank,
   Target,
-  Trophy
+  Trophy,
+  TrendingUp
 } from 'lucide-react'
 import { WalletConnection } from './WalletConnection'
-import { EnhancedAaveDepositModal } from './EnhancedAaveDepositModal'
-import { AaveTransactionHistory } from './AaveTransactionHistory'
+import { EnhancedDepositModal } from './EnhancedDepositModal'
+import { RealTransactionHistory } from './RealTransactionHistory'
+import { EnhancedPortfolioTracker } from './EnhancedPortfolioTracker'
 import { useUserBalances, usePortfolioSummary } from '../hooks/useProtocolData'
 import { useUSDCBalance, useDAIBalance, useWETHBalance } from '../hooks/useTokenBalance'
 import { Button } from './ui/Button'
@@ -33,6 +35,7 @@ import { cn } from '@/lib/utils'
 // Beginner-friendly protocol cards
 const ProtocolCard = ({ 
   name, 
+  displayName,
   description, 
   apy, 
   tvl, 
@@ -43,6 +46,7 @@ const ProtocolCard = ({
   earning = '0.00'
 }: {
   name: string
+  displayName?: string
   description: string
   apy: string
   tvl: string
@@ -76,7 +80,7 @@ const ProtocolCard = ({
                 <Icon className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-lg">{name}</h3>
+                <h3 className="font-bold text-white text-lg">{displayName || name}</h3>
                 <p className="text-slate-400 text-sm beginner-tooltip" data-tooltip={description}>
                   {description.length > 30 ? description.substring(0, 30) + '...' : description}
                 </p>
@@ -244,38 +248,53 @@ export function CryptoTwitterDashboard() {
   const [modalAction, setModalAction] = useState<'deposit' | 'withdraw'>('deposit')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showTransactions, setShowTransactions] = useState(false)
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'transactions'>('portfolio')
 
-  // Beginner-friendly protocol data
+  // Enhanced protocol data with all supported protocols
   const protocols = [
     {
-      name: 'Aave v3',
-      description: 'Safest way to earn interest on your crypto',
-      apy: '3.2%',
+      name: 'aave_v3',
+      displayName: 'Aave v3',
+      description: 'Decentralized lending protocol',
+      apy: '4.2%',
       tvl: '$12.8B',
       icon: Shield,
       gradient: 'crypto-gradient',
-      userBalance: String(userBalances?.find(b => b.protocol === 'Aave v3')?.balance || '0.00'),
+      userBalance: String(userBalances?.find(b => b.protocol === 'aave_v3')?.balance || '0.00'),
       earning: '24.50'
     },
     {
-      name: 'Compound',
-      description: 'Popular lending protocol with great rewards',
-      apy: '2.8%',
-      tvl: '$8.4B',
-      icon: BarChart3,
+      name: 'compound_v2',
+      displayName: 'Compound v2',
+      description: 'Traditional cToken lending',
+      apy: '4.1%',
+      tvl: '$8.5B',
+      icon: Coins,
       gradient: 'crypto-green-gradient',
-      userBalance: String(userBalances?.find(b => b.protocol === 'Compound')?.balance || '0.00'),
-      earning: '12.30'
+      userBalance: String(userBalances?.find(b => b.protocol === 'compound_v2')?.balance || '0.00'),
+      earning: '0.00'
     },
     {
-      name: 'MakerDAO',
-      description: 'Earn with the stablecoin that started it all',
-      apy: '4.1%',
-      tvl: '$6.2B',
-      icon: Star,
+      name: 'compound_v3',
+      displayName: 'Compound v3',
+      description: 'Capital efficient markets',
+      apy: '3.9%',
+      tvl: '$7.5B',
+      icon: TrendingUp,
+      gradient: 'crypto-gradient',
+      userBalance: String(userBalances?.find(b => b.protocol === 'compound_v3')?.balance || '0.00'),
+      earning: '0.00'
+    },
+    {
+      name: 'maker_dsr',
+      displayName: 'Maker DSR',
+      description: 'Dai Savings Rate',
+      apy: '3.3%',
+      tvl: '$5.0B',
+      icon: DollarSign,
       gradient: 'crypto-gold-gradient',
-      userBalance: String(userBalances?.find(b => b.protocol === 'MakerDAO')?.balance || '0.00'),
-      earning: '8.90'
+      userBalance: String(userBalances?.find(b => b.protocol === 'maker_dsr')?.balance || '0.00'),
+      earning: '0.00'
     }
   ]
 
@@ -370,51 +389,74 @@ export function CryptoTwitterDashboard() {
         <DashboardStats 
           totalBalance={(totalUsd || 0).toFixed(2)}
           totalEarnings={(totalAccruedUsd || 0).toFixed(2)}
-          portfolioGrowth="12.4"
+          portfolioGrowth={totalUsd > 0 ? ((totalAccruedUsd / totalUsd) * 100).toFixed(1) : "0.0"}
         />
+
+        {/* Tab Navigation */}
+        <div className="mb-8">
+          <div className="flex space-x-1 bg-slate-800/50 p-1 rounded-xl w-fit">
+            <button
+              onClick={() => setActiveTab('portfolio')}
+              className={cn(
+                "px-6 py-3 rounded-lg font-medium transition-all duration-200",
+                activeTab === 'portfolio'
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : "text-slate-400 hover:text-white hover:bg-slate-700/50"
+              )}
+            >
+              Portfolio
+            </button>
+            <button
+              onClick={() => setActiveTab('transactions')}
+              className={cn(
+                "px-6 py-3 rounded-lg font-medium transition-all duration-200",
+                activeTab === 'transactions'
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : "text-slate-400 hover:text-white hover:bg-slate-700/50"
+              )}
+            >
+              Transactions
+            </button>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Main content */}
           <div className="lg:col-span-3">
-            {/* Protocols */}
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-6">
-                <h2 className="text-xl font-bold text-white">Start Earning</h2>
-                <div className="beginner-tooltip" data-tooltip="These are safe protocols where you can deposit crypto to earn interest">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            {activeTab === 'portfolio' ? (
+              <div className="space-y-8">
+                {/* Enhanced Portfolio Tracker */}
+                <EnhancedPortfolioTracker />
+                
+                {/* Protocols */}
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <h2 className="text-xl font-bold text-white">DeFi Protocols</h2>
+                    <div className="beginner-tooltip" data-tooltip="These are safe protocols where you can deposit crypto to earn interest">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {protocols.map((protocol, index) => (
+                      <motion.div
+                        key={protocol.name}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <ProtocolCard
+                          {...protocol}
+                          onClick={() => handleProtocolClick(protocol.name)}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {protocols.map((protocol, index) => (
-                  <motion.div
-                    key={protocol.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <ProtocolCard
-                      {...protocol}
-                      onClick={() => handleProtocolClick(protocol.name)}
-                    />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Transaction History */}
-            <AnimatePresence>
-              {showTransactions && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <AaveTransactionHistory />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            ) : (
+              <RealTransactionHistory />
+            )}
           </div>
 
           {/* Sidebar */}
@@ -474,9 +516,10 @@ export function CryptoTwitterDashboard() {
       </div>
 
       {/* Enhanced Modal */}
-      {isModalOpen && selectedProtocol && selectedProtocol === 'Aave v3' && (
-        <EnhancedAaveDepositModal
+      {isModalOpen && selectedProtocol && (
+        <EnhancedDepositModal
           action={modalAction}
+          protocol={selectedProtocol}
           open={isModalOpen}
           onClose={handleCloseModal}
           userAddress={address!}

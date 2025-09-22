@@ -66,9 +66,9 @@ export function SavingsPortfolioView({ portfolio }: SavingsPortfolioViewProps) {
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Protocol Breakdown</h3>
         <div className="space-y-4">
-          {Object.entries(protocolGroups).map(([protocol, balances]) => {
-            const protocolValue = balances.reduce((sum, balance) => sum + balance.valueUSD, 0)
-            const protocolAPY = balances.reduce((sum, balance) => sum + balance.apy * balance.valueUSD, 0) / protocolValue
+          {Object.entries(protocolGroups).map(([protocol, balances]: [string, ProtocolBalance[]]) => {
+            const protocolValue = balances.reduce((sum: number, balance: ProtocolBalance) => sum + balance.valueUSD, 0)
+            const protocolAPY = balances.reduce((sum: number, balance: ProtocolBalance) => sum + balance.apy * balance.valueUSD, 0) / protocolValue
             
             return (
               <div key={protocol} className="border border-gray-200 rounded-lg p-4">
@@ -97,7 +97,7 @@ export function SavingsPortfolioView({ portfolio }: SavingsPortfolioViewProps) {
                 </div>
 
                 <div className="space-y-2">
-                  {balances.map((balance, index) => (
+                  {balances.map((balance: ProtocolBalance, index: number) => (
                     <div key={index} className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded">
                       <div className="flex items-center space-x-3">
                         <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">

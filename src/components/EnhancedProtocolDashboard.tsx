@@ -8,7 +8,7 @@ import { protocolManager } from '../lib/protocols'
 import { useProtocolData, useUserBalances } from '../hooks/useProtocolData'
 import { PortfolioOverview } from './PortfolioOverview'
 import { ProtocolAPYView } from './ProtocolAPYView'
-import { DepositWithdrawModal } from './DepositWithdrawModal'
+import { EnhancedDepositModal } from './EnhancedDepositModal'
 import { SearchProtocols } from './SearchProtocols'
 import { Shield, TrendingUp, Settings, Zap, LogOut, User, Plus, Minus, RefreshCw, DollarSign } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
@@ -175,14 +175,29 @@ export function EnhancedProtocolDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Portfolio Overview */}
         <div className="mb-8">
-          <PortfolioOverview />
+          <PortfolioOverview 
+            totalUsd={0} 
+            totalAccruedUsd={0} 
+            averageApy={0} 
+            protocolCount={0}
+            assetCount={0}
+            interestData={[]}
+            totalEarnings={0}
+            totalProjectedDaily={0}
+            totalProjectedMonthly={0}
+            totalProjectedYearly={0}
+          />
         </div>
 
         {/* Protocol Selection */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">DeFi Protocols</h2>
-            <SearchProtocols />
+            <SearchProtocols 
+              protocolData={protocolData as any || {}} 
+              onDeposit={handleDeposit} 
+              onWithdraw={handleWithdraw} 
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -254,15 +269,21 @@ export function EnhancedProtocolDashboard() {
 
         {/* Protocol APY Comparison */}
         <div className="mb-8">
-          <ProtocolAPYView />
+          <ProtocolAPYView 
+            protocolData={protocolData as any || {}}
+            userBalances={[]}
+            onDeposit={handleDeposit}
+            onWithdraw={handleWithdraw}
+          />
         </div>
       </div>
 
       {/* Deposit/Withdraw Modal */}
       {isModalOpen && selectedProtocol && (
-        <DepositWithdrawModal
+        <EnhancedDepositModal
           protocol={selectedProtocol}
           action={modalAction}
+          open={isModalOpen}
           onClose={handleCloseModal}
           userAddress={address as Address}
         />

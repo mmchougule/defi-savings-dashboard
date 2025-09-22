@@ -41,13 +41,13 @@ export function usePortfolioSummary() {
   const { data: balances = [], isLoading } = useUserBalances()
 
   const summary = {
-    totalUsd: balances.reduce((sum, balance) => sum + balance.balanceUsd, 0),
-    totalAccruedUsd: balances.reduce((sum, balance) => sum + balance.accruedInterestUsd, 0),
+    totalUsd: balances.reduce((sum, balance) => sum + balance.valueUSD, 0),
+    totalAccruedUsd: balances.reduce((sum, balance) => sum + (balance.valueUSD * balance.apy / 100), 0),
     averageApy: balances.length > 0 
       ? balances.reduce((sum, balance) => sum + balance.apy, 0) / balances.length 
       : 0,
     protocolCount: new Set(balances.map(b => b.protocol)).size,
-    assetCount: new Set(balances.map(b => b.asset)).size,
+    assetCount: new Set(balances.map(b => b.symbol)).size,
   }
 
   return {
